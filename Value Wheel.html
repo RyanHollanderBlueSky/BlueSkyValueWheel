@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Intrinsic vs Extrinsic Value Wheel</title>
+   <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      height: 100vh;
+      background: #f9f9f9;
+    }
+
+    .title-container {
+      text-align: center;
+      margin-top: 20px;
+      margin-bottom: 20px;
+    }
+
+    .title {
+      font-size: 36px;
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
+
+    .description {
+      font-size: 18px;
+      color: #333;
+    }
+
+    #wheel-container {
+      position: relative;
+      width: 600px;
+      height: 600px;
+      border-radius: 50%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-top: 20px;
+    }
+
+    .value-card {
+      position: absolute;
+      width: 140px;
+      height: 140px;
+      border: 2px solid #ddd;
+      border-radius: 50%;
+      background-color: #fff;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      padding: 10px;
+      box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+      transition: transform 0.3s, box-shadow 0.3s, z-index 0s;
+      cursor: pointer;
+      z-index: 1;
+    }
+
+    .value-card h3 {
+      margin: 0;
+      font-size: 14px;
+      color: #333;
+    }
+
+    .value-card p {
+      margin: 5px 0 0;
+      font-size: 12px;
+      color: #555;
+    }
+
+    .value-card .early-adopter-label {
+      font-size: 10px;
+      color: #7b4b9e;
+      font-weight: bold;
+      margin-top: 5px;
+    }
+
+    .value-card:hover {
+      transform: scale(1.5);
+      box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.3);
+      z-index: 10;
+    }
+
+    .early-adopter {
+      border: 3px solid #7b4b9e; /* Purple border for early adopters */
+      background-color: #e6ccff;
+    }
+
+    .highlight-red {
+      border: 3px solid red;
+    }
+
+    .underline-red h3 {
+      text-decoration: underline;
+      text-decoration-color: red;
+    }
+
+    .center-text {
+      font-size: 18px;
+      text-align: center;
+      color: #333;
+      margin-bottom: 40px;
+      max-width: 300px;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
+  </style>
+</head>
+<body>
+  <div class="title-container">
+    <div class="title">Intrinsic vs Extrinsic Value</div>
+    <div class="description">
+      Explore the differences and benefits of intrinsic and extrinsic values of our Bluesky Management platform.
+    </div>
+  </div>
+  <div id="wheel-container">
+    <div class="center-text" id="center-text"></div>
+  </div>
+  <script>
+    const values = {
+      intrinsic: [
+        { name: "Innovation Leadership", description: "Be seen as a leader in technology and strategy.", url: "https://example.com/innovation" },
+        { name: "Scalability", description: "Easily manage complex, large-scale campaigns.", url: "https://example.com/scalability" },
+        { name: "Precision", description: "Data-driven results tailored to unique audiences.", url: "https://example.com/precision" },
+        { name: "Trustworthiness", description: "Ensure compliance and security for high-profile organizations.", url: "https://example.com/trustworthiness" },
+        { name: "Convenience", description: "Provide ease of use and accessibility.", highlight: "red", url: "https://example.com/convenience" }
+      ],
+      extrinsic: [
+        { name: "Cost Efficiency", description: "Maximize output while reducing operational costs.", highlight: "red", url: "https://example.com/cost-efficiency" },
+        { name: "Reputation Boost", description: "Enhance credibility with cutting-edge solutions.", url: "https://example.com/reputation" },
+        { name: "Time Savings", description: "Save time on campaign setup and reporting.", highlight: "red", url: "https://example.com/time-savings" },
+        { name: "Custom Solutions", description: "Tailored features for specific organizational needs.", url: "https://example.com/custom-solutions" }
+      ],
+      earlyAdopters: [
+        { name: "Risk Tolerance", description: "Willing to experiment for long-term gains.", underline: "red", url: "https://example.com/risk-tolerance" },
+        { name: "Differentiation", description: "Seek competitive edges over peers.", url: "https://example.com/differentiation" }
+      ]
+    };
+
+    const container = document.getElementById("wheel-container");
+    const radius = 250; // Radius of the circle
+    const combinedValues = [
+      ...values.intrinsic.map(v => ({ ...v, type: 'intrinsic' })),
+      ...values.extrinsic.map(v => ({ ...v, type: 'extrinsic' })),
+      ...values.earlyAdopters.map(v => ({ ...v, type: 'earlyAdopter' }))
+    ];
+
+    // Generate the circular layout
+    combinedValues.forEach((value, index) => {
+      const angle = (index / combinedValues.length) * 2 * Math.PI; // Calculate angle
+      const x = radius * Math.cos(angle); // X coordinate
+      const y = radius * Math.sin(angle); // Y coordinate
+
+      const card = document.createElement("div");
+      card.className = "value-card";
+      if (value.type === "earlyAdopter") {
+        card.classList.add("early-adopter"); // Mark early adopters
+      }
+      if (value.highlight === "red") {
+        card.classList.add("highlight-red"); // Add red border
+      }
+      if (value.underline === "red") {
+        card.classList.add("underline-red"); // Add red underline
+      }
+
+      card.style.transform = `translate(${x}px, ${y}px)`; // Position card in a circle
+
+      const title = document.createElement("h3");
+      title.innerText = value.name;
+
+      const description = document.createElement("p");
+      description.innerText = value.description;
+
+      if (value.type === "earlyAdopter") {
+        const label = document.createElement("span");
+        label.className = "early-adopter-label";
+        label.innerText = "Early Adopter";
+        card.appendChild(label);
+      }
+
+      card.appendChild(title);
+      card.appendChild(description);
+      container.appendChild(card);
+
+      // Add event listener for card click to navigate to the URL
+      card.addEventListener("click", () => {
+        window.location.href = value.url; // Navigate to the specified URL
+      });
+
+      card.addEventListener("mouseenter", () => {
+        centerText.innerText = value.description; // Populate center text with hovered card's description
+      });
+
+      card.addEventListener("mouseleave", () => {
+        centerText.innerText = ""; // Clear center text when not hovering
+      });
+    });
+
+    // Populate center text with a description or any other content
+    const centerText = document.getElementById("center-text");
+    centerText.innerText = "Explore the differences and benefits of intrinsic and extrinsic values."; // Example text
+  </script>
+</body>
+</html>
